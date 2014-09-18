@@ -5,7 +5,7 @@ var async = require('async');
 var sys = require('sys');
 var exec = require('child_process').exec;
 
-exports.convert = function(document, format, callback) {
+exports.convert = function(document, format, filter, callback) {
     return async.auto({
         soffice: function(callback) {
             if (process.platform !== 'darwin') {
@@ -45,7 +45,12 @@ exports.convert = function(document, format, callback) {
             return fs.writeFile(path.join(results.tempDir, 'source'), document, callback);
         }],
         convert: ['soffice', 'saveSource', function(callback, results) {
-            var command = results.soffice+' --headless --convert-to '+format+' --outdir '+results.tempDir+' '+path.join(results.tempDir, 'source');
+            var command = results.soffice+' --headless --convert-to '+format;
+            if (filter !== undefined) {
+                command += ':"'+filter+'"';
+            }
+            command += ' --outdir '+results.tempDir+' '+path.join(results.tempDir, 'source');
+
             return exec(command, function (err, stdout, stderr) {
                 if (err) {
                     return callback(err);
