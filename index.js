@@ -1,6 +1,5 @@
 var fs = require('fs');
-//var temp = require('temp').track();
-var temp = require('temp');
+var temp = require('temp').track();
 var path = require('path');
 var async = require('async');
 var sys = require('sys');
@@ -65,10 +64,9 @@ exports.convert = function(document, format, callback) {
             });
         }]
     }, function(err, res) {
-        //temp.cleanup();
+        temp.cleanup();
 
         if (err) {
-            console.log("ERROR", err);
             return callback(err);
         }
 
