@@ -8,12 +8,14 @@ var exec = require('child_process').exec;
 exports.convert = function(document, format, filter, callback) {
     return async.auto({
         soffice: function(callback) {
-            if (process.platform !== 'darwin') {
+            if (process.platform !== 'darwin' && process.platform !== 'linux') {
                 return callback('Operating system not yet supported: '+process.platform);
             }
 
             var paths = [
-                '/Applications/LibreOffice.app/Contents/MacOS/soffice'
+                '/Applications/LibreOffice.app/Contents/MacOS/soffice',
+                '/usr/bin/libreoffice',
+                '/usr/bin/soffice'
             ];
 
             return async.map(paths, function(path, callback) {
