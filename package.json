@@ -18,8 +18,15 @@
     "René Rössler <rene@freshx.de>"
   ],
   "license": "MIT",
-  "dependencies":{
+  "dependencies": {
     "temp": "~0.7.0",
     "async": "^0.2.10"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
   }
 }

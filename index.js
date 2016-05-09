@@ -2,23 +2,24 @@ var fs = require('fs');
 var temp = require('temp').track();
 var path = require('path');
 var async = require('async');
-var sys = require('sys');
 var exec = require('child_process').exec;
 
 exports.convert = function(document, format, filter, callback) {
     return async.auto({
         soffice: function(callback) {
-            if (process.platform !== 'darwin' && process.platform !== 'linux') {
-                return callback('Operating system not yet supported: '+process.platform);
+            function paths() {
+                switch (process.platform) {
+                    case 'darwin': return ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
+                    case 'linux': return ['/usr/bin/libreoffice', '/usr/bin/soffice'];
+                    case 'win32': return [path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe')];
+                }
             }
 
-            var paths = [
-                '/Applications/LibreOffice.app/Contents/MacOS/soffice',
-                '/usr/bin/libreoffice',
-                '/usr/bin/soffice'
-            ];
+            if (!paths(process.platform)) {
+                return callback('Operating system not yet supported: '+ process.platform);
+            }
 
-            return async.map(paths, function(path, callback) {
+            return async.map(paths(process.platform), function(path, callback) {
                 return fs.exists(path, function(exists) {
                     if (exists === true) {
                         return callback(null, path);
@@ -28,9 +29,10 @@ exports.convert = function(document, format, filter, callback) {
                 });
             }, function(err, res) {
                 for (var i in res) {
-                    return callback(null, res[i]);
+                    if (res[i]) {
+                        return callback(null, process.platform === 'win32' ? '"' + res[i] + '"' : res[i]);
+                    }
                 }
-
                 return callback('Could not find soffice binary');
             });
         },
@@ -47,7 +49,7 @@ exports.convert = function(document, format, filter, callback) {
             return fs.writeFile(path.join(results.tempDir, 'source'), document, callback);
         }],
         convert: ['soffice', 'saveSource', function(callback, results) {
-            var command = results.soffice+' --headless --convert-to '+format;
+            var command = results.soffice + ' --headless --convert-to '+format;
             if (filter !== undefined) {
                 command += ':"'+filter+'"';
             }
