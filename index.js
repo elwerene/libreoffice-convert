@@ -11,7 +11,7 @@ exports.convert = function(document, format, filter, callback) {
                 switch (process.platform) {
                     case 'darwin': return ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
                     case 'linux': return ['/usr/bin/libreoffice', '/usr/bin/soffice'];
-                    case 'win32': return [path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe')];
+                    case 'win32': return [path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'), path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe')];
                 }
             }
 
