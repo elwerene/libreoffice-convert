@@ -4,6 +4,7 @@ var path = require('path');
 var async = require('async');
 var exec = require('child_process').exec;
 
+
 exports.convert = function(document, format, filter, callback) {
     return async.auto({
         soffice: function(callback) {
@@ -11,7 +12,9 @@ exports.convert = function(document, format, filter, callback) {
                 switch (process.platform) {
                     case 'darwin': return ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
                     case 'linux': return ['/usr/bin/libreoffice', '/usr/bin/soffice'];
-                    case 'win32': return [path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'), path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe')];
+                    case 'win32': return [path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'), 
+                        path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe'),
+                        path.join(process.env['PROGRAMFILES'], 'LibreOffice/program/soffice.exe')];
                 }
             }
 
@@ -46,6 +49,7 @@ exports.convert = function(document, format, filter, callback) {
             });
         },
         saveSource: ['tempDir', function(callback, results) {
+           console.log('tmp = '+results.tempDir);
             return fs.writeFile(path.join(results.tempDir, 'source'), document, callback);
         }],
         convert: ['soffice', 'saveSource', function(callback, results) {
