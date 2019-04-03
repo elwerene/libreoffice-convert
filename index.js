@@ -49,7 +49,6 @@ exports.convert = function(document, format, filter, callback) {
             });
         },
         saveSource: ['tempDir', function(callback, results) {
-           console.log('tmp = '+results.tempDir);
             return fs.writeFile(path.join(results.tempDir, 'source'), document, callback);
         }],
         convert: ['soffice', 'saveSource', function(callback, results) {
