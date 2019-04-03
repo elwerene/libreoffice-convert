@@ -16,7 +16,8 @@
     "pdf"
   ],
   "contributors": [
-    "René Rössler <rene@freshx.de>"
+    "René Rössler <rene@freshx.de>",
+    "Dmitrii Kosinov <dnk@kakveselo.ru>"
   ],
   "license": "MIT",
   "dependencies": {
