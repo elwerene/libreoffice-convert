@@ -1,6 +1,6 @@
 {
   "name": "libreoffice-convert",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A simple and fast node.js module for converting office documents to different formats",
   "main": "index.js",
   "repository": "https://github.com/elwerene/libreoffice-convert",
@@ -12,21 +12,22 @@
     "xlsx",
     "xls",
     "doc",
-    "docx"
+    "docx",
+    "pdf"
   ],
   "contributors": [
-    "René Rössler <rene@freshx.de>"
+    "René Rössler <rene@freshx.de>",
+    "Dmitrii Kosinov <dnk@kakveselo.ru>"
   ],
   "license": "MIT",
   "dependencies": {
-    "temp": "~0.7.0",
+    "temp": "~0.9.0",
     "async": "^0.2.10"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5"
+    "jest": "^24.6.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "test": "jest"
   }
 }
