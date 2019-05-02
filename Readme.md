@@ -12,7 +12,11 @@ Please install libreoffice in /Applications (Mac), with your favorite package ma
 // Read file
 const docx = _fs.readFileSync(_path.join(__dirname, '/resources/hello.docx'));
 // Convert it to pdf format with undefined filter (see Libreoffice doc about filter)
-convert(docx, 'pdf', undefined, (done) => {
+convert(docx, 'pdf', undefined, (err, done) => {
+    if (err) {
+      console.log(`Error converting file: ${err}`);
+    }
+    
     // Here in done you have pdf file which you can save or transfer in another stream
     _fs.writeFileSync("hello.pdf", done);
 });
