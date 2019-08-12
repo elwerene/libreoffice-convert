@@ -9,12 +9,25 @@ Please install libreoffice in /Applications (Mac), with your favorite package ma
 
 ## Usage example ##
 ```javascript
+const libre = require('libreoffice-convert');
+
+const path = require('path');
+const fs = require('fs');
+
+const extend = '.pdf'
+const enterPath = path.join(__dirname, '/resources/example.docx');
+const outputPath = path.join(__dirname, `/resources/example.${extend}`);
+
 // Read file
-const docx = _fs.readFileSync(_path.join(__dirname, '/resources/hello.docx'));
+const enterPath = fs.readFileSync(enterPath);
 // Convert it to pdf format with undefined filter (see Libreoffice doc about filter)
-convert(docx, 'pdf', undefined, (done) => {
+libre.convert(enterPath, extend, undefined, (err, done) => {
+    if (err) {
+      console.log(`Error converting file: ${err}`);
+    }
+    
     // Here in done you have pdf file which you can save or transfer in another stream
-    _fs.writeFileSync("hello.pdf", done);
+    fs.writeFileSync(outputPath);
 });
 ```
 
