@@ -27,7 +27,7 @@ libre.convert(enterPath, extend, undefined, (err, done) => {
     }
     
     // Here in done you have pdf file which you can save or transfer in another stream
-    fs.writeFileSync(outputPath);
+    fs.writeFileSync(outputPath, done);
 });
 ```
 
