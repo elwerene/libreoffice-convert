@@ -16,7 +16,7 @@ const fs = require('fs');
 
 const extend = '.pdf'
 const enterPath = path.join(__dirname, '/resources/example.docx');
-const outputPath = path.join(__dirname, `/resources/example.${extend}`);
+const outputPath = path.join(__dirname, `/resources/example${extend}`);
 
 // Read file
 const enterPath = fs.readFileSync(enterPath);
