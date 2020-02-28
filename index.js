@@ -49,13 +49,11 @@ exports.convert = (document, format, filter, callback) => {
             return exec(command, callback);
         }],
         loadDestination: ['convert', (results, callback) =>
-            fs.readFile(path.join(results.tempDir, `source.${format}`), (err, destination) => {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback(null, destination);
-            })],
+            async.retry({
+                times: 3,
+                interval: 200
+            }, (callback) => fs.readFile(path.join(results.tempDir, `source.${format}`), callback), callback)
+        ]
     }, (err, res) => {
         temp.cleanup();
 
