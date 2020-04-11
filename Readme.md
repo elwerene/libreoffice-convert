@@ -19,9 +19,9 @@ const enterPath = path.join(__dirname, '/resources/example.docx');
 const outputPath = path.join(__dirname, `/resources/example${extend}`);
 
 // Read file
-const enterPath = fs.readFileSync(enterPath);
+const file = fs.readFileSync(enterPath);
 // Convert it to pdf format with undefined filter (see Libreoffice doc about filter)
-libre.convert(enterPath, extend, undefined, (err, done) => {
+libre.convert(file, extend, undefined, (err, done) => {
     if (err) {
       console.log(`Error converting file: ${err}`);
     }
