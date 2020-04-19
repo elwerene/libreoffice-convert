@@ -6,20 +6,24 @@ const path = require('path');
 const async = require('async');
 const { exec } = require('child_process');
 
-exports.convert = (document, format, filter, callback) => {
+exports.convert = (document, format, filter, customBinaryPaths, callback) => {
     return async.auto({
         soffice: (callback) => {
             let paths = [];
+            const darwinPaths = ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
+            const linuxPaths = ['/usr/bin/libreoffice', '/usr/bin/soffice'];
+            const win32Paths = [
+                path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'),
+                path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe'),
+                path.join(process.env.PROGRAMFILES, 'LibreOffice/program/soffice.exe'),
+            ];
+            const customBinaryCondition = customBinaryPaths && customBinaryPaths.isArray;
             switch (process.platform) {
-                case 'darwin': paths = ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
+                case 'darwin': customBinaryCondition ? paths = customBinaryPaths : paths = darwinPaths;
                     break;
-                case 'linux': paths = ['/usr/bin/libreoffice', '/usr/bin/soffice'];
+                case 'linux': customBinaryCondition ? paths = customBinaryPaths : paths = linuxPaths;
                     break;
-                case 'win32': paths = [
-                    path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'),
-                    path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe'),
-                    path.join(process.env.PROGRAMFILES, 'LibreOffice/program/soffice.exe'),
-                ];
+                case 'win32': customBinaryCondition ? paths = customBinaryPaths : paths = win32Paths;
                     break;
                 default:
                     return callback(new Error(`Operating system not yet supported: ${process.platform}`));
