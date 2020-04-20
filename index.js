@@ -6,18 +6,21 @@ const path = require('path');
 const async = require('async');
 const { exec } = require('child_process');
 
-exports.convert = (document, format, filter, customBinaryPaths, callback) => {
+const darwinPaths = ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
+const linuxPaths = ['/usr/bin/libreoffice', '/usr/bin/soffice'];
+const win32Paths = [
+    path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'),
+    path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe'),
+    path.join(process.env.PROGRAMFILES, 'LibreOffice/program/soffice.exe'),
+];
+
+let customBinaryPaths = [];
+
+exports.convert = (document, format, filter, callback) => {
     return async.auto({
         soffice: (callback) => {
             let paths = [];
-            const darwinPaths = ['/Applications/LibreOffice.app/Contents/MacOS/soffice'];
-            const linuxPaths = ['/usr/bin/libreoffice', '/usr/bin/soffice'];
-            const win32Paths = [
-                path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'),
-                path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe'),
-                path.join(process.env.PROGRAMFILES, 'LibreOffice/program/soffice.exe'),
-            ];
-            const customBinaryCondition = customBinaryPaths && customBinaryPaths.isArray;
+            const customBinaryCondition = customBinaryPaths.length === 0 && customBinaryPaths.isArray;
             switch (process.platform) {
                 case 'darwin': customBinaryCondition ? paths = customBinaryPaths : paths = darwinPaths;
                     break;
@@ -67,4 +70,9 @@ exports.convert = (document, format, filter, customBinaryPaths, callback) => {
 
         return callback(null, res.loadDestination);
     });
+};
+
+exports.convertWithCustomBinaryPath = (document, format, filter, givenCustomBinaryPaths, callback) => {
+    customBinaryPaths = givenCustomBinaryPaths;
+    this.convert(document, format, filter, callback);
 };
