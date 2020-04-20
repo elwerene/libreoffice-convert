@@ -20,7 +20,7 @@ exports.convert = (document, format, filter, callback) => {
     return async.auto({
         soffice: (callback) => {
             let paths = [];
-            const customBinaryCondition = customBinaryPaths.length === 0 && customBinaryPaths.isArray;
+            const customBinaryCondition = Array.isArray(customBinaryPaths) && customBinaryPaths.length;
             switch (process.platform) {
                 case 'darwin': customBinaryCondition ? paths = customBinaryPaths : paths = darwinPaths;
                     break;
