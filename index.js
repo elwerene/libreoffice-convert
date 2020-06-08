@@ -1,12 +1,14 @@
 'use strict';
 
 const fs = require('fs');
-const temp = require('temp').track();
 const path = require('path');
 const async = require('async');
+const tmp = require('tmp');
 const { exec } = require('child_process');
 
 exports.convert = (document, format, filter, callback) => {
+    const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true});
+    const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true});
     return async.auto({
         soffice: (callback) => {
             let paths = [];
@@ -37,14 +39,13 @@ exports.convert = (document, format, filter, callback) => {
                 }
             );
         },
-        tempDir: callback => temp.mkdir('libreofficeConvert', callback),
-        saveSource: ['tempDir', (results, callback) => fs.writeFile(path.join(results.tempDir, 'source'), document, callback)],
+        saveSource: callback => fs.writeFile(path.join(tempDir.name, 'source'), document, callback),
         convert: ['soffice', 'saveSource', (results, callback) => {
-            let command = `${results.soffice} --headless --convert-to ${format}`;
+            let command = `${results.soffice} -env:UserInstallation=file://${installDir.name} --headless --convert-to ${format}`;
             if (filter !== undefined) {
                 command += `:"${filter}"`;
             }
-            command += ` --outdir ${results.tempDir} ${path.join(results.tempDir, 'source')}`;
+            command += ` --outdir ${tempDir.name} ${path.join(tempDir.name, 'source')}`;
 
             return exec(command, callback);
         }],
@@ -52,10 +53,11 @@ exports.convert = (document, format, filter, callback) => {
             async.retry({
                 times: 3,
                 interval: 200
-            }, (callback) => fs.readFile(path.join(results.tempDir, `source.${format}`), callback), callback)
+            }, (callback) => fs.readFile(path.join(tempDir.name, `source.${format}`), callback), callback)
         ]
     }, (err, res) => {
-        temp.cleanup();
+        tempDir.removeCallback();
+        installDir.removeCallback();
 
         if (err) {
             return callback(err);
