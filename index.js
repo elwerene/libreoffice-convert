@@ -57,6 +57,7 @@ exports.convert = (document, format, filter, callback) => {
         ]
     }, (err, res) => {
         tempDir.removeCallback();
+        installDir.removeCallback();
 
         if (err) {
             return callback(err);
