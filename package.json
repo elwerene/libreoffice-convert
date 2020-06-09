@@ -17,7 +17,8 @@
   ],
   "contributors": [
     "René Rössler <rene@freshx.de>",
-    "Dmitrii Kosinov <dnk@kakveselo.ru>"
+    "Dmitrii Kosinov <dnk@kakveselo.ru>",
+    "Brian Chong <bgorhoball@protonmail.com>"
   ],
   "license": "MIT",
   "dependencies": {
