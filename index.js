@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const async = require('async');
 const tmp = require('tmp');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 
 exports.convert = (document, format, filter, callback) => {
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true});
@@ -46,8 +46,8 @@ exports.convert = (document, format, filter, callback) => {
                 command += `:"${filter}"`;
             }
             command += ` --outdir ${tempDir.name} ${path.join(tempDir.name, 'source')}`;
-
-            return exec(command, callback);
+            command = command.split(' ');
+            return execFile(command[0], command.slice(1), callback);
         }],
         loadDestination: ['convert', (results, callback) =>
             async.retry({
