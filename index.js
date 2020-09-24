@@ -6,8 +6,8 @@ const async = require('async');
 const tmp = require('tmp');
 const { exec } = require('child_process');
 
-const convertWithOptions = (document, format, filter, tmpOptions, callback) => {
-    tmpOptions = tmpOptions || {};
+const convertWithOptions = (document, format, filter, options, callback) => {
+    const tmpOptions = (options || {}).tmpOptions || {};
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
     return async.auto({
