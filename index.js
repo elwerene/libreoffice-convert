@@ -6,9 +6,10 @@ const async = require('async');
 const tmp = require('tmp');
 const { execFile } = require('child_process');
 
-exports.convert = (document, format, filter, callback) => {
-    const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true});
-    const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true});
+const convertWithOptions = (document, format, filter, options, callback) => {
+    const tmpOptions = (options || {}).tmpOptions || {};
+    const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
+    const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
     return async.auto({
         soffice: (callback) => {
             let paths = [];
@@ -65,4 +66,13 @@ exports.convert = (document, format, filter, callback) => {
 
         return callback(null, res.loadDestination);
     });
+};
+
+const convert = (document, format, filter, callback) => {
+    return convertWithOptions(document, format, filter, {}, callback)
+};
+
+module.exports = {
+    convert,
+    convertWithOptions
 };
