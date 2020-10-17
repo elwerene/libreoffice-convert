@@ -43,13 +43,13 @@ const convertWithOptions = (document, format, filter, options, callback) => {
         },
         saveSource: callback => fs.writeFile(path.join(tempDir.name, 'source'), document, callback),
         convert: ['soffice', 'saveSource', (results, callback) => {
-            let command = `${results.soffice} -env:UserInstallation=file://${installDir.name} --headless --convert-to ${format}`;
+            let command = `-env:UserInstallation=file://${installDir.name} --headless --convert-to ${format}`;
             if (filter !== undefined) {
                 command += `:"${filter}"`;
             }
             command += ` --outdir ${tempDir.name} ${path.join(tempDir.name, 'source')}`;
-            command = command.split(' ');
-            return execFile(command[0], command.slice(1), callback);
+            const args = command.split(' ');
+            return execFile(results.soffice, args, callback);
         }],
         loadDestination: ['convert', (results, callback) =>
             async.retry({
