@@ -37,7 +37,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
                         return callback(new Error('Could not find soffice binary'));
                     }
 
-                    return callback(null, process.platform === 'win32' ? `"${res[0]}"` : res[0]);
+                    return callback(null, res[0]);
                 }
             );
         },
