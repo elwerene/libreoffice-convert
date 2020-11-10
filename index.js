@@ -11,6 +11,9 @@ const convertWithOptions = (document, format, filter, options, callback) => {
     const asyncOptions = (options || {}).asyncOptions || {};
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
+    // convert installDir to POSIX format
+    // to prevent problems on Windows OS
+    const posixInstallDir = installDir.name.split(path.sep).join(path.posix.sep);
     return async.auto({
         soffice: (callback) => {
             let paths = [];
@@ -43,7 +46,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
         },
         saveSource: callback => fs.writeFile(path.join(tempDir.name, 'source'), document, callback),
         convert: ['soffice', 'saveSource', (results, callback) => {
-            let command = `-env:UserInstallation=file://${installDir.name} --headless --convert-to ${format}`;
+            let command = `-env:UserInstallation=file://${posixInstallDir} --headless --convert-to ${format}`;
             if (filter !== undefined) {
                 command += `:"${filter}"`;
             }
