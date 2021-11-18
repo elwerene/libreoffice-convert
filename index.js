@@ -55,7 +55,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             async.retry({
                 times: asyncOptions.times || 3,
                 interval: asyncOptions.interval || 200
-            }, (callback) => fs.readFile(path.join(tempDir.name, `source.${format}`), callback), callback)
+            }, (callback) => fs.readFile(path.join(tempDir.name, `source.${format.split(":")[0]}`), callback), callback)
         ]
     }, (err, res) => {
         tempDir.removeCallback();
