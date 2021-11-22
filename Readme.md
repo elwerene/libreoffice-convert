@@ -9,25 +9,30 @@ Please install libreoffice in /Applications (Mac), with your favorite package ma
 ## Usage example
 
 ```javascript
-const libre = require('libreoffice-convert');
+'use strict';
 
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 
-const ext = '.pdf'
-const inputPath = path.join(__dirname, '/resources/example.docx');
-const outputPath = path.join(__dirname, `/resources/example${ext}`);
+const libre = require('libreoffice-convert');
+libre.convertAsync = require('util').promisify(libre.convert);
 
-// Read file
-const docxBuf = fs.readFileSync(inputPath);
+async function main() {
+    const ext = '.pdf'
+    const inputPath = path.join(__dirname, '/resources/example.docx');
+    const outputPath = path.join(__dirname, `/resources/example${ext}`);
 
-// Convert it to pdf format with undefined filter (see Libreoffice docs about filter)
-libre.convert(docxBuf, ext, undefined, (err, pdfBuf) => {
-    if (err) {
-      console.log(`Error converting file: ${err}`);
-    }
+    // Read file
+    const docxBuf = await fs.readFile(inputPath);
+
+    // Convert it to pdf format with undefined filter (see Libreoffice docs about filter)
+    let pdfBuf = await libre.convertAsync(docxBuf, ext, undefined);
     
     // Here in done you have pdf file which you can save or transfer in another stream
-    fs.writeFileSync(outputPath, pdfBuf);
+    await fs.writeFile(outputPath, pdfBuf);
+}
+
+main().catch(function (err) {
+    console.log(`Error converting file: ${err}`);
 });
 ```
