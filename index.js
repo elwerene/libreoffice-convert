@@ -47,7 +47,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             if (filter !== undefined) {
                 command += `:"${filter}"`;
             }
-            command += ` --outdir ${tempDir.name} ${path.join(tempDir.name, 'source')}`;
+            let command = `${results.soffice}  --headless --invisible --convert-to ${format}`;
             const args = command.split(' ');
             return execFile(results.soffice, args, callback);
         }],
