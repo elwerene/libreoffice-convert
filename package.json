@@ -24,12 +24,12 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.2",
+    "async": "^3.2.3",
     "tmp": "^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
-    "jest": "^24.7.1"
+    "jest": "^27.5.1"
   },
   "engines": {
     "node": ">=6"
