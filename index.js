@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 const async = require('async');
 const tmp = require('tmp');
 const { execFile } = require('child_process');
@@ -43,7 +44,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
         },
         saveSource: callback => fs.writeFile(path.join(tempDir.name, 'source'), document, callback),
         convert: ['soffice', 'saveSource', (results, callback) => {
-            let command = `-env:UserInstallation=file://${installDir.name} --headless --convert-to ${format}`;
+            let command = `-env:UserInstallation=${url.pathToFileURL(installDir.name)} --headless --convert-to ${format}`;
             if (filter !== undefined) {
                 command += `:"${filter}"`;
             }
