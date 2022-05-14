@@ -13,6 +13,7 @@ declare module "libreoffice-convert" {
     options: {
       tmpOptions?: Record<string | number | symbol, unknown>;
       asyncOptions?: { times?: number; interval?: number };
+      sofficeBinaryPaths?: string[];
     },
     callback: (err: NodeJS.ErrnoException | null, data: Buffer) => void
   ): void;
