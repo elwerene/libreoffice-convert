@@ -14,7 +14,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
     return async.auto({
         soffice: (callback) => {
-            let paths = (options || {}).sofficeBinaryPaths ?? [];
+            let paths = (options || {}).sofficeBinaryPaths || [];
             switch (process.platform) {
                 case 'darwin': paths = [...paths, '/Applications/LibreOffice.app/Contents/MacOS/soffice'];
                     break;
