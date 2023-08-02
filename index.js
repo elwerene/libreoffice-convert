@@ -50,7 +50,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             args.push(`-env:UserInstallation=${url.pathToFileURL(installDir.name)}`);
             args.push('--headless');
             args.push('--convert-to');
-            args.push(formatParam);
+            args.push(fmt);
             args.push('--outdir');
             args.push(tempDir.name);
             args.push(path.join(tempDir.name, 'source'));
