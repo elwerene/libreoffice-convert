@@ -48,10 +48,12 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             let fmt = !(filter ?? "").includes(" ") ? `${format}:${filter}` : `"${format}:${filter}"`;
             let args = [];
             args.push(`-env:UserInstallation=${url.pathToFileURL(installDir.name)}`);
-            args.push(`--headless`);
-            args.push(`--convert-to ${fmt}`);
-            args.push(`--outdir ${tempDir.name}`);
-            args.push(`${path.join(tempDir.name, 'source')}`);
+            args.push('--headless');
+            args.push('--convert-to');
+            args.push(formatParam);
+            args.push('--outdir');
+            args.push(tempDir.name);
+            args.push(path.join(tempDir.name, 'source'));
             return execFile(results.soffice, args, callback);
         }],
         loadDestination: ['convert', (results, callback) =>
