@@ -45,7 +45,8 @@ const convertWithOptions = (document, format, filter, options, callback) => {
         },
         saveSource: callback => fs.writeFile(path.join(tempDir.name, 'source'), document, callback),
         convert: ['soffice', 'saveSource', (results, callback) => {
-            let fmt = !(filter ?? "").includes(" ") ? `${format}:${filter}` : `"${format}:${filter}"`;
+            let filterParam = filter?.length ? `:${filter}` : "";
+            let fmt = !(filter ?? "").includes(" ") ? `${format}${filterParam}` : `"${format}${filterParam}"`;
             let args = [];
             args.push(`-env:UserInstallation=${url.pathToFileURL(installDir.name)}`);
             args.push('--headless');
