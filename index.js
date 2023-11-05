@@ -10,6 +10,7 @@ const { execFile } = require('child_process');
 const convertWithOptions = (document, format, filter, options, callback) => {
     const tmpOptions = (options || {}).tmpOptions || {};
     const asyncOptions = (options || {}).asyncOptions || {};
+    const execOptions = (options || {}).execOptions || {};
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
     return async.auto({
@@ -51,7 +52,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             }
             command += ` --outdir ${tempDir.name} ${path.join(tempDir.name, 'source')}`;
             const args = command.split(' ');
-            return execFile(results.soffice, args, callback);
+            return execFile(results.soffice, args, execOptions, callback);
         }],
         loadDestination: ['convert', (results, callback) =>
             async.retry({
@@ -59,15 +60,13 @@ const convertWithOptions = (document, format, filter, options, callback) => {
                 interval: asyncOptions.interval || 200
             }, (callback) => fs.readFile(path.join(tempDir.name, `source.${format.split(":")[0]}`), callback), callback)
         ]
-    }, (err, res) => {
+    }).then( (res) => {
+        return callback(null, res.loadDestination);
+    }).catch( (err) => {
+        return callback(err);
+    }).finally( () => {
         tempDir.removeCallback();
         installDir.removeCallback();
-
-        if (err) {
-            return callback(err);
-        }
-
-        return callback(null, res.loadDestination);
     });
 };
 
