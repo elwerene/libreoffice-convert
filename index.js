@@ -19,7 +19,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             switch (process.platform) {
                 case 'darwin': paths = [...paths, '/Applications/LibreOffice.app/Contents/MacOS/soffice'];
                     break;
-                case 'linux': paths = [...paths, '/usr/bin/libreoffice', '/usr/bin/soffice', '/snap/bin/libreoffice'];
+                case 'linux': paths = [...paths, '/usr/bin/libreoffice', '/usr/bin/soffice', '/snap/bin/libreoffice', '/opt/libreoffice/program/soffice', '/opt/libreoffice7.6/program/soffice'];
                     break;
                 case 'win32': paths = [
                     ...paths,
