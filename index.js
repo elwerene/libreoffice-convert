@@ -11,6 +11,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
     const tmpOptions = (options || {}).tmpOptions || {};
     const asyncOptions = (options || {}).asyncOptions || {};
     const execOptions = (options || {}).execOptions || {};
+    const fileName = (options || {}).fileName || 'source';
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
     return async.auto({
@@ -44,7 +45,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
                 }
             );
         },
-        saveSource: callback => fs.writeFile(path.join(tempDir.name, 'source'), document, callback),
+        saveSource: callback => fs.writeFile(path.join(tempDir.name, fileName), document, callback),
         convert: ['soffice', 'saveSource', (results, callback) => {
             let filterParam = filter?.length ? `:${filter}` : "";
             let fmt = !(filter ?? "").includes(" ") ? `${format}${filterParam}` : `"${format}${filterParam}"`;
@@ -55,7 +56,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             args.push(fmt);
             args.push('--outdir');
             args.push(tempDir.name);
-            args.push(path.join(tempDir.name, 'source'));
+            args.push(path.join(tempDir.name, fileName));
           
             return execFile(results.soffice, args, execOptions, callback);
         }],
@@ -63,7 +64,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             async.retry({
                 times: asyncOptions.times || 3,
                 interval: asyncOptions.interval || 200
-            }, (callback) => fs.readFile(path.join(tempDir.name, `source.${format.split(":")[0]}`), callback), callback)
+            }, (callback) => fs.readFile(path.join(tempDir.name, `${fileName}.${format.split(":")[0]}`), callback), callback)
         ]
     }).then( (res) => {
         return callback(null, res.loadDestination);
