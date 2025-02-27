@@ -24,9 +24,12 @@ const convertWithOptions = (document, format, filter, options, callback) => {
                     break;
                 case 'win32': paths = [
                     ...paths,
-                    path.join(process.env['PROGRAMFILES(X86)'], 'LIBREO~1/program/soffice.exe'),
-                    path.join(process.env['PROGRAMFILES(X86)'], 'LibreOffice/program/soffice.exe'),
-                    path.join(process.env.PROGRAMFILES, 'LibreOffice/program/soffice.exe'),
+                    path.join(process.env['PROGRAMFILES(X86)'] || '', 'LIBREO~1/program/soffice.exe'),
+                    path.join(process.env['PROGRAMFILES(X86)'] || '', 'LibreOffice/program/soffice.exe'),
+                    path.join(process.env.PROGRAMFILES_X86 || '', 'LibreOffice/program/soffice.exe'),
+                    path.join(process.env.PROGRAMFILES || '', 'LibreOffice/program/soffice.exe'),  
+                    process.env.LIBRE_OFFICE_EXE || '',
+                     'C:/Program Files/CLibreOffice/program/soffice.exe'
                 ];
                     break;
                 default:
