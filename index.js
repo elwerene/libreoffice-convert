@@ -29,7 +29,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
                     path.join(process.env.PROGRAMFILES_X86 || '', 'LibreOffice/program/soffice.exe'),
                     path.join(process.env.PROGRAMFILES || '', 'LibreOffice/program/soffice.exe'),  
                     process.env.LIBRE_OFFICE_EXE || '',
-                     'C:/Program Files/CLibreOffice/program/soffice.exe'
+                     'C:/Program Files/LibreOffice/program/soffice.exe'
                 ];
                     break;
                 default:
