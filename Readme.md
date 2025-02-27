@@ -4,7 +4,8 @@ A simple and fast node.js module for converting office documents to different fo
 
 ## Dependency
 
-Please install libreoffice in /Applications (Mac), with your favorite package manager (Linux), or with the msi (Windows).
+Please install libreoffice in /Applications (Mac), with your favorite package manager (Linux), or with the msi (Windows)
+(On Windows, add `PROGRAMFILES` environment variable for Windows program files path to your local project)
 
 ## Usage example
 
