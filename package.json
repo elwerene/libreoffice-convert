@@ -35,6 +35,6 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --logHeapUsage"
   }
 }
