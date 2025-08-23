@@ -1,21 +1,17 @@
 /// <reference types="node" />
 declare module "libreoffice-convert" {
   function convert(
-    document: Buffer,
+    source: string,
     format: string,
     filter: string | undefined,
-    callback: (err: NodeJS.ErrnoException | null, data: Buffer) => void
-  ): void;
+  ): Promise<string>;
   function convertWithOptions(
-    document: Buffer,
+    source: string,
     format: string,
     filter: string | undefined,
     options: {
-      tmpOptions?: Record<string | number | symbol, unknown>;
-      asyncOptions?: { times?: number; interval?: number };
       sofficeBinaryPaths?: string[];
       fileName?: string;
     },
-    callback: (err: NodeJS.ErrnoException | null, data: Buffer) => void
-  ): void;
+  ): Promise<string>;
 }
