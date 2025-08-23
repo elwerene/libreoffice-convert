@@ -11,7 +11,7 @@ declare module "libreoffice-convert" {
     filter: string | undefined,
     options: {
       sofficeBinaryPaths?: string[];
-      fileName?: string;
+      execOptions: Record<string, unknown>;
     },
   ): Promise<string>;
 }

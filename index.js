@@ -12,9 +12,12 @@ const execFileAsync = promisify(execFile);
 
 const convertWithOptions = async (source, format, filter, options = {}) => {
   const execOptions = options.execOptions || {};
-  let fileName = options.fileName || 'source';
-  if (!path.isAbsolute(fileName)) {
-    fileName = path.join(TMP_DIR, `${fileName}.${format.split(":")[0]}`);
+  const ext = format.split(":")[0];
+  let fileName = path.basename(source, path.extname(source));
+  if (path.isAbsolute(source)) {
+    fileName = path.join(path.dirname(source), `${fileName}.${ext}`);
+  } else {
+    fileName = path.join(TMP_DIR, `${fileName}.${ext}`);
   }
   const outdir = path.dirname(fileName);
   let paths = (options || {}).sofficeBinaryPaths || [];
