@@ -14,6 +14,7 @@ declare module "libreoffice-convert" {
       tmpOptions?: Record<string | number | symbol, unknown>;
       asyncOptions?: { times?: number; interval?: number };
       sofficeBinaryPaths?: string[];
+      sofficeAdditionalArgs?: string[];
       fileName?: string;
     },
     callback: (err: NodeJS.ErrnoException | null, data: Buffer) => void
