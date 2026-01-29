@@ -2,7 +2,7 @@ var _jest = require('jest'),
     _fs = require('fs'),
     _path = require('path'),
     { exec } = require('child_process'),
-    convert = require('../index').convert
+    convert = require('../index').convert,
     convertWithOptions = require('../index').convertWithOptions;
 
 describe('convert', () => {
