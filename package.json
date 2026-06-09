@@ -1,6 +1,6 @@
 {
   "name": "libreoffice-convert",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "A simple and fast node.js module for converting office documents to different formats",
   "main": "index.js",
   "types": "index.d.ts",

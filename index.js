@@ -11,7 +11,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
     const tmpOptions = (options || {}).tmpOptions || {};
     const asyncOptions = (options || {}).asyncOptions || {};
     const execOptions = (options || {}).execOptions || {};
-    const fileName = (options || {}).fileName || 'source';
+    const fileName = path.basename((options || {}).fileName || 'source');
     const sofficeAdditionalArgs = (options || {}).sofficeAdditionalArgs || [];
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
