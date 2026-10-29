@@ -29,6 +29,18 @@ describe('convert', () => {
     });
 
 
+    it('should convert a word document to text using a profile template', (done) => {
+        const docx = _fs.readFileSync(_path.join(__dirname, '/resources/hello.docx'));
+        const template = _fs.mkdtempSync(_path.join(require('os').tmpdir(), 'profileTemplate_'));
+        // populate the template profile with a first conversion
+        exec(`soffice -env:UserInstallation=${require('url').pathToFileURL(template)} --headless --terminate_after_init`, () => {
+            convertWithOptions(docx, 'txt', undefined, { profileTemplate: template }, (err, result) => {
+                _fs.rmSync(template, { recursive: true, force: true });
+                expectHello(done)(err, result);
+            });
+        });
+    }, 60000);
+
     it('if an another instance of soffice exists, should convert a word document to text',  (done) => {
         exec("soffice  --headless")
         // this command create an instance of soffice. This instance will get a failure "Error: source file could not be loaded"
