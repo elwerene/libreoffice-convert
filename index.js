@@ -52,9 +52,12 @@ const convertWithOptions = (document, format, filter, options, callback) => {
         },
         saveSource: callback => fs.writeFile(path.join(tempDir.name, fileName), document, callback),
         // seed the user profile from a template to skip soffice's first-run profile creation
-        copyProfile: callback => profileTemplate
-            ? fs.cp(profileTemplate, installDir.name, { recursive: true }, callback)
-            : callback(),
+        copyProfile: callback => {
+            if (!profileTemplate) return callback();
+            if (typeof fs.cp !== 'function') return callback(new Error('profileTemplate requires Node.js >= 16.7'));
+            // skip the lock file left behind by the soffice run that created the template
+            return fs.cp(profileTemplate, installDir.name, { recursive: true, filter: src => path.basename(src) !== '.lock' }, callback);
+        },
         convert: ['soffice', 'saveSource', 'copyProfile', (results, callback) => {
             let filterParam = filter?.length ? `:${filter}` : "";
             let fmt = !(filter ?? "").includes(" ") ? `${format}${filterParam}` : `"${format}${filterParam}"`;

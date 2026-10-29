@@ -1,6 +1,8 @@
 var _jest = require('jest'),
     _fs = require('fs'),
     _path = require('path'),
+    _os = require('os'),
+    _url = require('url'),
     { exec } = require('child_process'),
     convert = require('../index').convert,
     convertWithOptions = require('../index').convertWithOptions;
@@ -31,11 +33,18 @@ describe('convert', () => {
 
     it('should convert a word document to text using a profile template', (done) => {
         const docx = _fs.readFileSync(_path.join(__dirname, '/resources/hello.docx'));
-        const template = _fs.mkdtempSync(_path.join(require('os').tmpdir(), 'profileTemplate_'));
+        const workDir = _fs.mkdtempSync(_path.join(_os.tmpdir(), 'profileTemplate_'));
+        const template = _path.join(workDir, 'profile');
+        const seed = _path.join(workDir, 'seed.txt');
+        _fs.writeFileSync(seed, 'hello');
         // populate the template profile with a first conversion
-        exec(`soffice -env:UserInstallation=${require('url').pathToFileURL(template)} --headless --terminate_after_init`, () => {
+        exec(`soffice -env:UserInstallation=${_url.pathToFileURL(template)} --headless --convert-to pdf --outdir ${workDir} ${seed}`, (err) => {
+            if (err) {
+                _fs.rmSync(workDir, { recursive: true, force: true });
+                return done(err);
+            }
             convertWithOptions(docx, 'txt', undefined, { profileTemplate: template }, (err, result) => {
-                _fs.rmSync(template, { recursive: true, force: true });
+                _fs.rmSync(workDir, { recursive: true, force: true });
                 expectHello(done)(err, result);
             });
         });

@@ -50,8 +50,9 @@ main().catch(function (err) {
 - `sofficeAdditionalArgs` – extra command-line arguments passed to `soffice`
 - `profileTemplate` – path to an existing LibreOffice user profile directory. It is copied into the fresh per-conversion profile, so `soffice` skips creating a new profile on every run, which speeds up conversions. The template itself is never modified.
 
-A profile template can be generated once with:
+A profile template can be generated once by converting any small file with a dedicated profile directory:
 
 ```sh
-soffice -env:UserInstallation=file:///path/to/profile-template --headless --terminate_after_init
+echo hello > seed.txt
+soffice -env:UserInstallation=file:///path/to/profile-template --headless --convert-to pdf seed.txt
 ```
