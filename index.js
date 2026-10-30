@@ -13,6 +13,7 @@ const convertWithOptions = (document, format, filter, options, callback) => {
     const execOptions = (options || {}).execOptions || {};
     const fileName = path.basename((options || {}).fileName || 'source');
     const sofficeAdditionalArgs = (options || {}).sofficeAdditionalArgs || [];
+    const profileTemplate = (options || {}).profileTemplate;
     const tempDir = tmp.dirSync({prefix: 'libreofficeConvert_', unsafeCleanup: true, ...tmpOptions});
     const installDir = tmp.dirSync({prefix: 'soffice', unsafeCleanup: true, ...tmpOptions});
     return async.auto({
@@ -50,7 +51,14 @@ const convertWithOptions = (document, format, filter, options, callback) => {
             );
         },
         saveSource: callback => fs.writeFile(path.join(tempDir.name, fileName), document, callback),
-        convert: ['soffice', 'saveSource', (results, callback) => {
+        // seed the user profile from a template to skip soffice's first-run profile creation
+        copyProfile: callback => {
+            if (!profileTemplate) return callback();
+            if (typeof fs.cp !== 'function') return callback(new Error('profileTemplate requires Node.js >= 16.7'));
+            // skip the lock file left behind by the soffice run that created the template
+            return fs.cp(profileTemplate, installDir.name, { recursive: true, filter: src => path.basename(src) !== '.lock' }, callback);
+        },
+        convert: ['soffice', 'saveSource', 'copyProfile', (results, callback) => {
             let filterParam = filter?.length ? `:${filter}` : "";
             let fmt = !(filter ?? "").includes(" ") ? `${format}${filterParam}` : `"${format}${filterParam}"`;
             let args = [];

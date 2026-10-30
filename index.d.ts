@@ -16,6 +16,7 @@ declare module "libreoffice-convert" {
       sofficeBinaryPaths?: string[];
       sofficeAdditionalArgs?: string[];
       fileName?: string;
+      profileTemplate?: string;
     },
     callback: (err: NodeJS.ErrnoException | null, data: Buffer) => void
   ): void;
