@@ -3,7 +3,7 @@ var _jest = require('jest'),
     _path = require('path'),
     _os = require('os'),
     _url = require('url'),
-    { exec } = require('child_process'),
+    { exec, spawn } = require('child_process'),
     convert = require('../index').convert,
     convertWithOptions = require('../index').convertWithOptions;
 
@@ -51,12 +51,16 @@ describe('convert', () => {
     }, 60000);
 
     it('if an another instance of soffice exists, should convert a word document to text',  (done) => {
-        exec("soffice  --headless")
+        // own process group, so killing it also stops soffice.bin behind the soffice wrapper script
+        const instance = spawn('soffice', ['--headless'], { detached: true, stdio: 'ignore' });
         // this command create an instance of soffice. This instance will get a failure "Error: source file could not be loaded"
         // but only after we ask a new convert. So this is enought to reproduce fail when an another instance is open
         setTimeout(()=> {
             const docx = _fs.readFileSync(_path.join(__dirname, '/resources/hello.docx'));
-            convert(docx, 'txt', undefined, expectHello(done));
+            convert(docx, 'txt', undefined, (err, result) => {
+                process.kill(-instance.pid);
+                expectHello(done)(err, result);
+            });
         }, 100);
     });
 
